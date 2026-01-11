@@ -1,32 +1,69 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { UIEnchantment } from "@/types";
-import { EnchantmentDef } from "@/lib/constants"; // Importa la interfaz desde constants
-import { timeAgo } from "@/utils/formatters"; // Asumiendo que moviste timeAgo a utils
+import { EnchantmentDef } from "@/lib/constants";
+import { timeAgo } from "@/utils/formatters";
 import styles from "./EnchantmentRow.module.css";
+
+// 💰 Límite de precio en Minecraft (1 Stack)
+const MAX_PRICE = 64;
 
 interface Props {
   definition: EnchantmentDef;
-  entry?: UIEnchantment; // Puede ser undefined si no lo tenemos guardado
+  entry?: UIEnchantment;
   onSave: (id: string, lvl: number, prc: number) => void;
 }
 
 export default function EnchantmentRow({ definition, entry, onSave }: Props) {
-  // Estado local para edición fluida
   const [level, setLevel] = useState(entry?.level || 0);
   const [price, setPrice] = useState(entry?.price || 0);
 
-  // Sincronizar si cambia la DB (ej: QuickCheck actualizó este row)
   useEffect(() => {
     setLevel(entry?.level || 0);
     setPrice(entry?.price || 0);
   }, [entry]);
 
-  // Manejar el "Blur" (cuando sales del input) para guardar
   const handleBlur = () => {
-    // Solo guardar si hay cambios respecto a lo que había
     if (level !== (entry?.level || 0) || price !== (entry?.price || 0)) {
       onSave(definition.id, level, price);
+    }
+  };
+
+  // --- 🔒 VALIDACIÓN DE NIVEL (Igual que antes) ---
+  const handleLevelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val === "") {
+      setLevel(0);
+      return;
+    }
+
+    const num = parseInt(val);
+    if (isNaN(num)) return;
+
+    if (num > definition.maxLevel) setLevel(definition.maxLevel);
+    else if (num < 0) setLevel(0);
+    else setLevel(num);
+  };
+
+  // --- 💰 NUEVA VALIDACIÓN DE PRECIO ---
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    // Si borra, dejamos en 0 visualmente
+    if (val === "") {
+      setPrice(0);
+      return;
+    }
+
+    const num = parseInt(val);
+    if (isNaN(num)) return;
+
+    // Lógica de Portero para Precio
+    if (num > MAX_PRICE) {
+      setPrice(MAX_PRICE); // Fuerza el máximo (64)
+    } else if (num < 0) {
+      setPrice(0); // No negativos
+    } else {
+      setPrice(num);
     }
   };
 
@@ -62,14 +99,12 @@ export default function EnchantmentRow({ definition, entry, onSave }: Props) {
 
   return (
     <tr className={getRowClass()}>
-      {/* NOMBRE E INFO */}
       <td>
         <span className={styles.nameText}>{definition.name}</span>
         <div className={styles.metaContainer}>
           <span className={styles.subText}>
             {definition.appliesTo} • Max: {definition.maxLevel}
           </span>
-
           {entry?.modifiedBy && (
             <div className={styles.commitInfo}>
               <span className={styles.userDot}></span>
@@ -82,14 +117,13 @@ export default function EnchantmentRow({ definition, entry, onSave }: Props) {
         </div>
       </td>
 
-      {/* NIVEL */}
       <td style={{ textAlign: "center" }}>
         <input
           type="number"
           min="0"
           max={definition.maxLevel}
           value={level || ""}
-          onChange={(e) => setLevel(parseInt(e.target.value) || 0)}
+          onChange={handleLevelChange}
           onBlur={handleBlur}
           className={styles.inputNumber}
           placeholder="0"
@@ -99,15 +133,15 @@ export default function EnchantmentRow({ definition, entry, onSave }: Props) {
         </span>
       </td>
 
-      {/* PRECIO */}
       <td style={{ textAlign: "center" }}>
         <div className={styles.priceWrapper}>
           <span style={{ marginRight: "4px", opacity: 0.6 }}>$</span>
           <input
             type="number"
-            min="1"
+            min="0"
+            max={MAX_PRICE} // Sugerencia HTML
             value={price || ""}
-            onChange={(e) => setPrice(parseInt(e.target.value) || 0)}
+            onChange={handlePriceChange} // <--- APLICADO AQUÍ
             onBlur={handleBlur}
             className={styles.inputPrice}
             placeholder="-"
@@ -115,7 +149,6 @@ export default function EnchantmentRow({ definition, entry, onSave }: Props) {
         </div>
       </td>
 
-      {/* ESTADO */}
       <td style={{ textAlign: "right" }}>{renderBadge()}</td>
     </tr>
   );

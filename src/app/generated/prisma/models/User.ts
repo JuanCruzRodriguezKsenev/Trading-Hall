@@ -166,14 +166,16 @@ export type UserWhereInput = {
   id?: Prisma.StringFilter<"User"> | string
   username?: Prisma.StringFilter<"User"> | string
   password?: Prisma.StringFilter<"User"> | string
-  worlds?: Prisma.WorldListRelationFilter
+  ownedWorlds?: Prisma.WorldListRelationFilter
+  memberWorlds?: Prisma.WorldListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   username?: Prisma.SortOrder
   password?: Prisma.SortOrder
-  worlds?: Prisma.WorldOrderByRelationAggregateInput
+  ownedWorlds?: Prisma.WorldOrderByRelationAggregateInput
+  memberWorlds?: Prisma.WorldOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -183,7 +185,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   password?: Prisma.StringFilter<"User"> | string
-  worlds?: Prisma.WorldListRelationFilter
+  ownedWorlds?: Prisma.WorldListRelationFilter
+  memberWorlds?: Prisma.WorldListRelationFilter
 }, "id" | "username">
 
 export type UserOrderByWithAggregationInput = {
@@ -208,28 +211,32 @@ export type UserCreateInput = {
   id?: string
   username: string
   password: string
-  worlds?: Prisma.WorldCreateNestedManyWithoutMembersInput
+  ownedWorlds?: Prisma.WorldCreateNestedManyWithoutOwnerInput
+  memberWorlds?: Prisma.WorldCreateNestedManyWithoutMembersInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   username: string
   password: string
-  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutMembersInput
+  ownedWorlds?: Prisma.WorldUncheckedCreateNestedManyWithoutOwnerInput
+  memberWorlds?: Prisma.WorldUncheckedCreateNestedManyWithoutMembersInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
-  worlds?: Prisma.WorldUpdateManyWithoutMembersNestedInput
+  ownedWorlds?: Prisma.WorldUpdateManyWithoutOwnerNestedInput
+  memberWorlds?: Prisma.WorldUpdateManyWithoutMembersNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
-  worlds?: Prisma.WorldUncheckedUpdateManyWithoutMembersNestedInput
+  ownedWorlds?: Prisma.WorldUncheckedUpdateManyWithoutOwnerNestedInput
+  memberWorlds?: Prisma.WorldUncheckedUpdateManyWithoutMembersNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -268,6 +275,11 @@ export type UserMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
 }
 
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
+}
+
 export type UserListRelationFilter = {
   every?: Prisma.UserWhereInput
   some?: Prisma.UserWhereInput
@@ -282,75 +294,135 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
-export type UserCreateNestedManyWithoutWorldsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutWorldsInput, Prisma.UserUncheckedCreateWithoutWorldsInput> | Prisma.UserCreateWithoutWorldsInput[] | Prisma.UserUncheckedCreateWithoutWorldsInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWorldsInput | Prisma.UserCreateOrConnectWithoutWorldsInput[]
+export type UserCreateNestedOneWithoutOwnedWorldsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOwnedWorldsInput, Prisma.UserUncheckedCreateWithoutOwnedWorldsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOwnedWorldsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedManyWithoutMemberWorldsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMemberWorldsInput, Prisma.UserUncheckedCreateWithoutMemberWorldsInput> | Prisma.UserCreateWithoutMemberWorldsInput[] | Prisma.UserUncheckedCreateWithoutMemberWorldsInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMemberWorldsInput | Prisma.UserCreateOrConnectWithoutMemberWorldsInput[]
   connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
 }
 
-export type UserUncheckedCreateNestedManyWithoutWorldsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutWorldsInput, Prisma.UserUncheckedCreateWithoutWorldsInput> | Prisma.UserCreateWithoutWorldsInput[] | Prisma.UserUncheckedCreateWithoutWorldsInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWorldsInput | Prisma.UserCreateOrConnectWithoutWorldsInput[]
+export type UserUncheckedCreateNestedManyWithoutMemberWorldsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMemberWorldsInput, Prisma.UserUncheckedCreateWithoutMemberWorldsInput> | Prisma.UserCreateWithoutMemberWorldsInput[] | Prisma.UserUncheckedCreateWithoutMemberWorldsInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMemberWorldsInput | Prisma.UserCreateOrConnectWithoutMemberWorldsInput[]
   connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
 }
 
-export type UserUpdateManyWithoutWorldsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutWorldsInput, Prisma.UserUncheckedCreateWithoutWorldsInput> | Prisma.UserCreateWithoutWorldsInput[] | Prisma.UserUncheckedCreateWithoutWorldsInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWorldsInput | Prisma.UserCreateOrConnectWithoutWorldsInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutWorldsInput | Prisma.UserUpsertWithWhereUniqueWithoutWorldsInput[]
+export type UserUpdateOneRequiredWithoutOwnedWorldsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOwnedWorldsInput, Prisma.UserUncheckedCreateWithoutOwnedWorldsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOwnedWorldsInput
+  upsert?: Prisma.UserUpsertWithoutOwnedWorldsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOwnedWorldsInput, Prisma.UserUpdateWithoutOwnedWorldsInput>, Prisma.UserUncheckedUpdateWithoutOwnedWorldsInput>
+}
+
+export type UserUpdateManyWithoutMemberWorldsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMemberWorldsInput, Prisma.UserUncheckedCreateWithoutMemberWorldsInput> | Prisma.UserCreateWithoutMemberWorldsInput[] | Prisma.UserUncheckedCreateWithoutMemberWorldsInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMemberWorldsInput | Prisma.UserCreateOrConnectWithoutMemberWorldsInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutMemberWorldsInput | Prisma.UserUpsertWithWhereUniqueWithoutMemberWorldsInput[]
   set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
   disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
   delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
   connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutWorldsInput | Prisma.UserUpdateWithWhereUniqueWithoutWorldsInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutWorldsInput | Prisma.UserUpdateManyWithWhereWithoutWorldsInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutMemberWorldsInput | Prisma.UserUpdateWithWhereUniqueWithoutMemberWorldsInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutMemberWorldsInput | Prisma.UserUpdateManyWithWhereWithoutMemberWorldsInput[]
   deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
-export type UserUncheckedUpdateManyWithoutWorldsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutWorldsInput, Prisma.UserUncheckedCreateWithoutWorldsInput> | Prisma.UserCreateWithoutWorldsInput[] | Prisma.UserUncheckedCreateWithoutWorldsInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWorldsInput | Prisma.UserCreateOrConnectWithoutWorldsInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutWorldsInput | Prisma.UserUpsertWithWhereUniqueWithoutWorldsInput[]
+export type UserUncheckedUpdateManyWithoutMemberWorldsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMemberWorldsInput, Prisma.UserUncheckedCreateWithoutMemberWorldsInput> | Prisma.UserCreateWithoutMemberWorldsInput[] | Prisma.UserUncheckedCreateWithoutMemberWorldsInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMemberWorldsInput | Prisma.UserCreateOrConnectWithoutMemberWorldsInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutMemberWorldsInput | Prisma.UserUpsertWithWhereUniqueWithoutMemberWorldsInput[]
   set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
   disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
   delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
   connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutWorldsInput | Prisma.UserUpdateWithWhereUniqueWithoutWorldsInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutWorldsInput | Prisma.UserUpdateManyWithWhereWithoutWorldsInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutMemberWorldsInput | Prisma.UserUpdateWithWhereUniqueWithoutMemberWorldsInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutMemberWorldsInput | Prisma.UserUpdateManyWithWhereWithoutMemberWorldsInput[]
   deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
-export type UserCreateWithoutWorldsInput = {
+export type UserCreateWithoutOwnedWorldsInput = {
   id?: string
   username: string
   password: string
+  memberWorlds?: Prisma.WorldCreateNestedManyWithoutMembersInput
 }
 
-export type UserUncheckedCreateWithoutWorldsInput = {
+export type UserUncheckedCreateWithoutOwnedWorldsInput = {
   id?: string
   username: string
   password: string
+  memberWorlds?: Prisma.WorldUncheckedCreateNestedManyWithoutMembersInput
 }
 
-export type UserCreateOrConnectWithoutWorldsInput = {
+export type UserCreateOrConnectWithoutOwnedWorldsInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutWorldsInput, Prisma.UserUncheckedCreateWithoutWorldsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOwnedWorldsInput, Prisma.UserUncheckedCreateWithoutOwnedWorldsInput>
 }
 
-export type UserUpsertWithWhereUniqueWithoutWorldsInput = {
+export type UserCreateWithoutMemberWorldsInput = {
+  id?: string
+  username: string
+  password: string
+  ownedWorlds?: Prisma.WorldCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutMemberWorldsInput = {
+  id?: string
+  username: string
+  password: string
+  ownedWorlds?: Prisma.WorldUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutMemberWorldsInput = {
   where: Prisma.UserWhereUniqueInput
-  update: Prisma.XOR<Prisma.UserUpdateWithoutWorldsInput, Prisma.UserUncheckedUpdateWithoutWorldsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutWorldsInput, Prisma.UserUncheckedCreateWithoutWorldsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMemberWorldsInput, Prisma.UserUncheckedCreateWithoutMemberWorldsInput>
 }
 
-export type UserUpdateWithWhereUniqueWithoutWorldsInput = {
+export type UserUpsertWithoutOwnedWorldsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutOwnedWorldsInput, Prisma.UserUncheckedUpdateWithoutOwnedWorldsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOwnedWorldsInput, Prisma.UserUncheckedCreateWithoutOwnedWorldsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutOwnedWorldsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutOwnedWorldsInput, Prisma.UserUncheckedUpdateWithoutOwnedWorldsInput>
+}
+
+export type UserUpdateWithoutOwnedWorldsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  memberWorlds?: Prisma.WorldUpdateManyWithoutMembersNestedInput
+}
+
+export type UserUncheckedUpdateWithoutOwnedWorldsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  memberWorlds?: Prisma.WorldUncheckedUpdateManyWithoutMembersNestedInput
+}
+
+export type UserUpsertWithWhereUniqueWithoutMemberWorldsInput = {
   where: Prisma.UserWhereUniqueInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutWorldsInput, Prisma.UserUncheckedUpdateWithoutWorldsInput>
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMemberWorldsInput, Prisma.UserUncheckedUpdateWithoutMemberWorldsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMemberWorldsInput, Prisma.UserUncheckedCreateWithoutMemberWorldsInput>
 }
 
-export type UserUpdateManyWithWhereWithoutWorldsInput = {
+export type UserUpdateWithWhereUniqueWithoutMemberWorldsInput = {
+  where: Prisma.UserWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMemberWorldsInput, Prisma.UserUncheckedUpdateWithoutMemberWorldsInput>
+}
+
+export type UserUpdateManyWithWhereWithoutMemberWorldsInput = {
   where: Prisma.UserScalarWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutWorldsInput>
+  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutMemberWorldsInput>
 }
 
 export type UserScalarWhereInput = {
@@ -362,19 +434,21 @@ export type UserScalarWhereInput = {
   password?: Prisma.StringFilter<"User"> | string
 }
 
-export type UserUpdateWithoutWorldsInput = {
+export type UserUpdateWithoutMemberWorldsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  ownedWorlds?: Prisma.WorldUpdateManyWithoutOwnerNestedInput
 }
 
-export type UserUncheckedUpdateWithoutWorldsInput = {
+export type UserUncheckedUpdateWithoutMemberWorldsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  ownedWorlds?: Prisma.WorldUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
-export type UserUncheckedUpdateManyWithoutWorldsInput = {
+export type UserUncheckedUpdateManyWithoutMemberWorldsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
@@ -386,11 +460,13 @@ export type UserUncheckedUpdateManyWithoutWorldsInput = {
  */
 
 export type UserCountOutputType = {
-  worlds: number
+  ownedWorlds: number
+  memberWorlds: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  worlds?: boolean | UserCountOutputTypeCountWorldsArgs
+  ownedWorlds?: boolean | UserCountOutputTypeCountOwnedWorldsArgs
+  memberWorlds?: boolean | UserCountOutputTypeCountMemberWorldsArgs
 }
 
 /**
@@ -406,7 +482,14 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountWorldsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type UserCountOutputTypeCountOwnedWorldsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorldWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMemberWorldsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.WorldWhereInput
 }
 
@@ -415,7 +498,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   username?: boolean
   password?: boolean
-  worlds?: boolean | Prisma.User$worldsArgs<ExtArgs>
+  ownedWorlds?: boolean | Prisma.User$ownedWorldsArgs<ExtArgs>
+  memberWorlds?: boolean | Prisma.User$memberWorldsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -439,7 +523,8 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "password", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  worlds?: boolean | Prisma.User$worldsArgs<ExtArgs>
+  ownedWorlds?: boolean | Prisma.User$ownedWorldsArgs<ExtArgs>
+  memberWorlds?: boolean | Prisma.User$memberWorldsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -448,7 +533,8 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    worlds: Prisma.$WorldPayload<ExtArgs>[]
+    ownedWorlds: Prisma.$WorldPayload<ExtArgs>[]
+    memberWorlds: Prisma.$WorldPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -848,7 +934,8 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  worlds<T extends Prisma.User$worldsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$worldsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ownedWorlds<T extends Prisma.User$ownedWorldsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ownedWorldsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  memberWorlds<T extends Prisma.User$memberWorldsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$memberWorldsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1269,9 +1356,33 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.worlds
+ * User.ownedWorlds
  */
-export type User$worldsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$ownedWorldsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the World
+   */
+  select?: Prisma.WorldSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the World
+   */
+  omit?: Prisma.WorldOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorldInclude<ExtArgs> | null
+  where?: Prisma.WorldWhereInput
+  orderBy?: Prisma.WorldOrderByWithRelationInput | Prisma.WorldOrderByWithRelationInput[]
+  cursor?: Prisma.WorldWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorldScalarFieldEnum | Prisma.WorldScalarFieldEnum[]
+}
+
+/**
+ * User.memberWorlds
+ */
+export type User$memberWorldsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the World
    */

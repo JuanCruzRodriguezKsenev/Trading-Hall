@@ -5,10 +5,12 @@ import { UIEnchantment } from "@/types";
 import { apiCall } from "@/utils/api-client";
 import styles from "./QuickCheck.module.css";
 
+const MAX_PRICE = 64; // Límite global
+
 interface Props {
   worldId: string;
-  data: UIEnchantment[]; // Datos reales de la DB
-  onRefresh: () => void; // Para recargar la tabla tras guardar
+  data: UIEnchantment[];
+  onRefresh: () => void;
 }
 
 export default function QuickCheck({ worldId, data, onRefresh }: Props) {
@@ -17,13 +19,11 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
   const [newPrice, setNewPrice] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
 
-  // 1. Datos estáticos (Definiciones)
   const selectedDef = useMemo(
     () => MINECRAFT_ENCHANTS.find((e) => e.id === selectedId),
     [selectedId]
   );
 
-  // 2. Datos actuales (Lo que ya tienes en DB)
   const currentData = useMemo(() => {
     if (!selectedId) return null;
     const entry = data.find((d) => d.enchantmentId === selectedId);
@@ -33,20 +33,51 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
     };
   }, [selectedId, data]);
 
-  // 3. Validaciones
-  const maxLevel = selectedDef?.maxLevel || 1;
+  // --- 🔒 VALIDACIÓN NIVEL ---
+  const handleLevelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val === "") {
+      setNewLevel("");
+      return;
+    }
+
+    const num = parseInt(val);
+    if (isNaN(num)) return;
+
+    const max = selectedDef?.maxLevel || 1;
+    if (num > max) setNewLevel(String(max));
+    else if (num < 0) setNewLevel("1");
+    else setNewLevel(val);
+  };
+
+  // --- 💰 NUEVA VALIDACIÓN PRECIO ---
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val === "") {
+      setNewPrice("");
+      return;
+    }
+
+    const num = parseInt(val);
+    if (isNaN(num)) return;
+
+    if (num > MAX_PRICE) {
+      setNewPrice(String(MAX_PRICE)); // Fuerza 64
+    } else if (num < 0) {
+      setNewPrice("0");
+    } else {
+      setNewPrice(val);
+    }
+  };
+
+  // Logic for Save Button
   const inputLvl = parseInt(newLevel);
-  const isInvalidMax = selectedId && inputLvl > maxLevel;
+  // Solo validamos que no esté vacío o sea 0 negativo extraño
   const isInvalidZero =
     selectedId && (newLevel === "" || (inputLvl <= 0 && newLevel !== ""));
 
   const canSave =
-    selectedId &&
-    newLevel &&
-    newPrice &&
-    !isInvalidMax &&
-    !isInvalidZero &&
-    !isSaving;
+    selectedId && newLevel && newPrice && !isInvalidZero && !isSaving;
 
   const handleSave = async () => {
     if (!canSave) return;
@@ -59,7 +90,6 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
           price: parseInt(newPrice),
         },
       });
-      // Limpiamos y refrescamos
       setNewLevel("");
       setNewPrice("");
       onRefresh();
@@ -70,13 +100,9 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
     }
   };
 
-  const preventNegative = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "-" || e.key === "e") e.preventDefault();
-  };
-
   const getFeedbackMessage = () => {
     if (!selectedId || !currentData || !newLevel || !newPrice) return null;
-    if (isInvalidMax || isInvalidZero) return null;
+    if (isInvalidZero) return null;
 
     const currentLvl = currentData.level;
     const currentPrc = currentData.price;
@@ -93,7 +119,6 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
         </span>
       );
     }
-
     if (nextLvl < currentLvl) {
       return (
         <span className={styles.bad}>
@@ -101,22 +126,19 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
         </span>
       );
     }
-
     if (nextLvl === currentLvl) {
-      if (nextPrc < currentPrc) {
+      if (nextPrc < currentPrc)
         return (
           <span className={styles.good}>
-            🤑 ¡Oferta! Ahorras {currentPrc - nextPrc} esmeraldas.
+            🤑 ¡Oferta! Ahorras {currentPrc - nextPrc} esm.
           </span>
         );
-      }
-      if (nextPrc > currentPrc) {
+      if (nextPrc > currentPrc)
         return (
           <span className={styles.bad}>
-            💸 Estafa. Pierdes {nextPrc - currentPrc} esmeraldas.
+            💸 Estafa. Pierdes {nextPrc - currentPrc} esm.
           </span>
         );
-      }
       return (
         <span className={styles.neutral}>
           😐 Es exactamente la misma oferta.
@@ -129,6 +151,8 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
     () => [...MINECRAFT_ENCHANTS].sort((a, b) => a.name.localeCompare(b.name)),
     []
   );
+
+  const maxLabel = selectedDef ? selectedDef.maxLevel : "-";
 
   return (
     <div className={styles.card}>
@@ -159,21 +183,12 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
           <input
             type="number"
             className={styles.input}
-            style={
-              isInvalidMax
-                ? {
-                    borderColor: "var(--mc-redstone)",
-                    color: "var(--mc-redstone)",
-                  }
-                : {}
-            }
-            placeholder={selectedDef ? `Max ${maxLevel}` : "-"}
+            placeholder={selectedId ? `Max ${maxLabel}` : "-"}
             value={newLevel}
-            onChange={(e) => setNewLevel(e.target.value)}
-            onKeyDown={preventNegative}
+            onChange={handleLevelChange} // <--- VALIDACIÓN
             disabled={!selectedId}
             min="1"
-            max={maxLevel}
+            max={maxLabel}
           />
         </div>
 
@@ -184,10 +199,10 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
             className={styles.input}
             placeholder="$"
             value={newPrice}
-            onChange={(e) => setNewPrice(e.target.value)}
-            onKeyDown={preventNegative}
+            onChange={handlePriceChange} // <--- VALIDACIÓN
             disabled={!selectedId}
             min="1"
+            max={MAX_PRICE}
           />
         </div>
 
@@ -203,14 +218,7 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
             : "Reemplazar"}
         </button>
 
-        {isInvalidMax && (
-          <div className={styles.errorBanner}>
-            ⛔ ¡Error! El nivel máximo de <b>{selectedDef?.name}</b> es{" "}
-            {maxLevel}.
-          </div>
-        )}
-
-        {selectedId && !isInvalidMax && (newLevel || newPrice) && (
+        {selectedId && (newLevel || newPrice) && (
           <div className={styles.comparisonContainer}>
             <div className={styles.currentInfo}>
               Tienes actualmente:{" "}

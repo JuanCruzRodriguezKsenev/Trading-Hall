@@ -28,18 +28,24 @@ export type WorldMinAggregateOutputType = {
   id: string | null
   name: string | null
   createdAt: Date | null
+  inviteCode: string | null
+  ownerId: string | null
 }
 
 export type WorldMaxAggregateOutputType = {
   id: string | null
   name: string | null
   createdAt: Date | null
+  inviteCode: string | null
+  ownerId: string | null
 }
 
 export type WorldCountAggregateOutputType = {
   id: number
   name: number
   createdAt: number
+  inviteCode: number
+  ownerId: number
   _all: number
 }
 
@@ -48,18 +54,24 @@ export type WorldMinAggregateInputType = {
   id?: true
   name?: true
   createdAt?: true
+  inviteCode?: true
+  ownerId?: true
 }
 
 export type WorldMaxAggregateInputType = {
   id?: true
   name?: true
   createdAt?: true
+  inviteCode?: true
+  ownerId?: true
 }
 
 export type WorldCountAggregateInputType = {
   id?: true
   name?: true
   createdAt?: true
+  inviteCode?: true
+  ownerId?: true
   _all?: true
 }
 
@@ -139,6 +151,8 @@ export type WorldGroupByOutputType = {
   id: string
   name: string
   createdAt: Date
+  inviteCode: string
+  ownerId: string
   _count: WorldCountAggregateOutputType | null
   _min: WorldMinAggregateOutputType | null
   _max: WorldMaxAggregateOutputType | null
@@ -166,6 +180,9 @@ export type WorldWhereInput = {
   id?: Prisma.StringFilter<"World"> | string
   name?: Prisma.StringFilter<"World"> | string
   createdAt?: Prisma.DateTimeFilter<"World"> | Date | string
+  inviteCode?: Prisma.StringFilter<"World"> | string
+  ownerId?: Prisma.StringFilter<"World"> | string
+  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   members?: Prisma.UserListRelationFilter
   enchantments?: Prisma.EnchantmentEntryListRelationFilter
 }
@@ -174,25 +191,33 @@ export type WorldOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  inviteCode?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
+  owner?: Prisma.UserOrderByWithRelationInput
   members?: Prisma.UserOrderByRelationAggregateInput
   enchantments?: Prisma.EnchantmentEntryOrderByRelationAggregateInput
 }
 
 export type WorldWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  name?: string
+  inviteCode?: string
   AND?: Prisma.WorldWhereInput | Prisma.WorldWhereInput[]
   OR?: Prisma.WorldWhereInput[]
   NOT?: Prisma.WorldWhereInput | Prisma.WorldWhereInput[]
+  name?: Prisma.StringFilter<"World"> | string
   createdAt?: Prisma.DateTimeFilter<"World"> | Date | string
+  ownerId?: Prisma.StringFilter<"World"> | string
+  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   members?: Prisma.UserListRelationFilter
   enchantments?: Prisma.EnchantmentEntryListRelationFilter
-}, "id" | "name">
+}, "id" | "inviteCode">
 
 export type WorldOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  inviteCode?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
   _count?: Prisma.WorldCountOrderByAggregateInput
   _max?: Prisma.WorldMaxOrderByAggregateInput
   _min?: Prisma.WorldMinOrderByAggregateInput
@@ -205,13 +230,17 @@ export type WorldScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"World"> | string
   name?: Prisma.StringWithAggregatesFilter<"World"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"World"> | Date | string
+  inviteCode?: Prisma.StringWithAggregatesFilter<"World"> | string
+  ownerId?: Prisma.StringWithAggregatesFilter<"World"> | string
 }
 
 export type WorldCreateInput = {
   id?: string
   name: string
   createdAt?: Date | string
-  members?: Prisma.UserCreateNestedManyWithoutWorldsInput
+  inviteCode?: string
+  owner: Prisma.UserCreateNestedOneWithoutOwnedWorldsInput
+  members?: Prisma.UserCreateNestedManyWithoutMemberWorldsInput
   enchantments?: Prisma.EnchantmentEntryCreateNestedManyWithoutWorldInput
 }
 
@@ -219,7 +248,9 @@ export type WorldUncheckedCreateInput = {
   id?: string
   name: string
   createdAt?: Date | string
-  members?: Prisma.UserUncheckedCreateNestedManyWithoutWorldsInput
+  inviteCode?: string
+  ownerId: string
+  members?: Prisma.UserUncheckedCreateNestedManyWithoutMemberWorldsInput
   enchantments?: Prisma.EnchantmentEntryUncheckedCreateNestedManyWithoutWorldInput
 }
 
@@ -227,7 +258,9 @@ export type WorldUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.UserUpdateManyWithoutWorldsNestedInput
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedWorldsNestedInput
+  members?: Prisma.UserUpdateManyWithoutMemberWorldsNestedInput
   enchantments?: Prisma.EnchantmentEntryUpdateManyWithoutWorldNestedInput
 }
 
@@ -235,7 +268,9 @@ export type WorldUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.UserUncheckedUpdateManyWithoutWorldsNestedInput
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  members?: Prisma.UserUncheckedUpdateManyWithoutMemberWorldsNestedInput
   enchantments?: Prisma.EnchantmentEntryUncheckedUpdateManyWithoutWorldNestedInput
 }
 
@@ -243,18 +278,23 @@ export type WorldCreateManyInput = {
   id?: string
   name: string
   createdAt?: Date | string
+  inviteCode?: string
+  ownerId: string
 }
 
 export type WorldUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type WorldUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type WorldListRelationFilter = {
@@ -271,23 +311,36 @@ export type WorldCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  inviteCode?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
 }
 
 export type WorldMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  inviteCode?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
 }
 
 export type WorldMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  inviteCode?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
 }
 
 export type WorldScalarRelationFilter = {
   is?: Prisma.WorldWhereInput
   isNot?: Prisma.WorldWhereInput
+}
+
+export type WorldCreateNestedManyWithoutOwnerInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutOwnerInput, Prisma.WorldUncheckedCreateWithoutOwnerInput> | Prisma.WorldCreateWithoutOwnerInput[] | Prisma.WorldUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutOwnerInput | Prisma.WorldCreateOrConnectWithoutOwnerInput[]
+  createMany?: Prisma.WorldCreateManyOwnerInputEnvelope
+  connect?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
 }
 
 export type WorldCreateNestedManyWithoutMembersInput = {
@@ -296,10 +349,31 @@ export type WorldCreateNestedManyWithoutMembersInput = {
   connect?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
 }
 
+export type WorldUncheckedCreateNestedManyWithoutOwnerInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutOwnerInput, Prisma.WorldUncheckedCreateWithoutOwnerInput> | Prisma.WorldCreateWithoutOwnerInput[] | Prisma.WorldUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutOwnerInput | Prisma.WorldCreateOrConnectWithoutOwnerInput[]
+  createMany?: Prisma.WorldCreateManyOwnerInputEnvelope
+  connect?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
+}
+
 export type WorldUncheckedCreateNestedManyWithoutMembersInput = {
   create?: Prisma.XOR<Prisma.WorldCreateWithoutMembersInput, Prisma.WorldUncheckedCreateWithoutMembersInput> | Prisma.WorldCreateWithoutMembersInput[] | Prisma.WorldUncheckedCreateWithoutMembersInput[]
   connectOrCreate?: Prisma.WorldCreateOrConnectWithoutMembersInput | Prisma.WorldCreateOrConnectWithoutMembersInput[]
   connect?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
+}
+
+export type WorldUpdateManyWithoutOwnerNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutOwnerInput, Prisma.WorldUncheckedCreateWithoutOwnerInput> | Prisma.WorldCreateWithoutOwnerInput[] | Prisma.WorldUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutOwnerInput | Prisma.WorldCreateOrConnectWithoutOwnerInput[]
+  upsert?: Prisma.WorldUpsertWithWhereUniqueWithoutOwnerInput | Prisma.WorldUpsertWithWhereUniqueWithoutOwnerInput[]
+  createMany?: Prisma.WorldCreateManyOwnerInputEnvelope
+  set?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
+  disconnect?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
+  delete?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
+  connect?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
+  update?: Prisma.WorldUpdateWithWhereUniqueWithoutOwnerInput | Prisma.WorldUpdateWithWhereUniqueWithoutOwnerInput[]
+  updateMany?: Prisma.WorldUpdateManyWithWhereWithoutOwnerInput | Prisma.WorldUpdateManyWithWhereWithoutOwnerInput[]
+  deleteMany?: Prisma.WorldScalarWhereInput | Prisma.WorldScalarWhereInput[]
 }
 
 export type WorldUpdateManyWithoutMembersNestedInput = {
@@ -312,6 +386,20 @@ export type WorldUpdateManyWithoutMembersNestedInput = {
   connect?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
   update?: Prisma.WorldUpdateWithWhereUniqueWithoutMembersInput | Prisma.WorldUpdateWithWhereUniqueWithoutMembersInput[]
   updateMany?: Prisma.WorldUpdateManyWithWhereWithoutMembersInput | Prisma.WorldUpdateManyWithWhereWithoutMembersInput[]
+  deleteMany?: Prisma.WorldScalarWhereInput | Prisma.WorldScalarWhereInput[]
+}
+
+export type WorldUncheckedUpdateManyWithoutOwnerNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutOwnerInput, Prisma.WorldUncheckedCreateWithoutOwnerInput> | Prisma.WorldCreateWithoutOwnerInput[] | Prisma.WorldUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutOwnerInput | Prisma.WorldCreateOrConnectWithoutOwnerInput[]
+  upsert?: Prisma.WorldUpsertWithWhereUniqueWithoutOwnerInput | Prisma.WorldUpsertWithWhereUniqueWithoutOwnerInput[]
+  createMany?: Prisma.WorldCreateManyOwnerInputEnvelope
+  set?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
+  disconnect?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
+  delete?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
+  connect?: Prisma.WorldWhereUniqueInput | Prisma.WorldWhereUniqueInput[]
+  update?: Prisma.WorldUpdateWithWhereUniqueWithoutOwnerInput | Prisma.WorldUpdateWithWhereUniqueWithoutOwnerInput[]
+  updateMany?: Prisma.WorldUpdateManyWithWhereWithoutOwnerInput | Prisma.WorldUpdateManyWithWhereWithoutOwnerInput[]
   deleteMany?: Prisma.WorldScalarWhereInput | Prisma.WorldScalarWhereInput[]
 }
 
@@ -346,10 +434,40 @@ export type WorldUpdateOneRequiredWithoutEnchantmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutEnchantmentsInput, Prisma.WorldUpdateWithoutEnchantmentsInput>, Prisma.WorldUncheckedUpdateWithoutEnchantmentsInput>
 }
 
+export type WorldCreateWithoutOwnerInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  inviteCode?: string
+  members?: Prisma.UserCreateNestedManyWithoutMemberWorldsInput
+  enchantments?: Prisma.EnchantmentEntryCreateNestedManyWithoutWorldInput
+}
+
+export type WorldUncheckedCreateWithoutOwnerInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  inviteCode?: string
+  members?: Prisma.UserUncheckedCreateNestedManyWithoutMemberWorldsInput
+  enchantments?: Prisma.EnchantmentEntryUncheckedCreateNestedManyWithoutWorldInput
+}
+
+export type WorldCreateOrConnectWithoutOwnerInput = {
+  where: Prisma.WorldWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorldCreateWithoutOwnerInput, Prisma.WorldUncheckedCreateWithoutOwnerInput>
+}
+
+export type WorldCreateManyOwnerInputEnvelope = {
+  data: Prisma.WorldCreateManyOwnerInput | Prisma.WorldCreateManyOwnerInput[]
+  skipDuplicates?: boolean
+}
+
 export type WorldCreateWithoutMembersInput = {
   id?: string
   name: string
   createdAt?: Date | string
+  inviteCode?: string
+  owner: Prisma.UserCreateNestedOneWithoutOwnedWorldsInput
   enchantments?: Prisma.EnchantmentEntryCreateNestedManyWithoutWorldInput
 }
 
@@ -357,12 +475,41 @@ export type WorldUncheckedCreateWithoutMembersInput = {
   id?: string
   name: string
   createdAt?: Date | string
+  inviteCode?: string
+  ownerId: string
   enchantments?: Prisma.EnchantmentEntryUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutMembersInput = {
   where: Prisma.WorldWhereUniqueInput
   create: Prisma.XOR<Prisma.WorldCreateWithoutMembersInput, Prisma.WorldUncheckedCreateWithoutMembersInput>
+}
+
+export type WorldUpsertWithWhereUniqueWithoutOwnerInput = {
+  where: Prisma.WorldWhereUniqueInput
+  update: Prisma.XOR<Prisma.WorldUpdateWithoutOwnerInput, Prisma.WorldUncheckedUpdateWithoutOwnerInput>
+  create: Prisma.XOR<Prisma.WorldCreateWithoutOwnerInput, Prisma.WorldUncheckedCreateWithoutOwnerInput>
+}
+
+export type WorldUpdateWithWhereUniqueWithoutOwnerInput = {
+  where: Prisma.WorldWhereUniqueInput
+  data: Prisma.XOR<Prisma.WorldUpdateWithoutOwnerInput, Prisma.WorldUncheckedUpdateWithoutOwnerInput>
+}
+
+export type WorldUpdateManyWithWhereWithoutOwnerInput = {
+  where: Prisma.WorldScalarWhereInput
+  data: Prisma.XOR<Prisma.WorldUpdateManyMutationInput, Prisma.WorldUncheckedUpdateManyWithoutOwnerInput>
+}
+
+export type WorldScalarWhereInput = {
+  AND?: Prisma.WorldScalarWhereInput | Prisma.WorldScalarWhereInput[]
+  OR?: Prisma.WorldScalarWhereInput[]
+  NOT?: Prisma.WorldScalarWhereInput | Prisma.WorldScalarWhereInput[]
+  id?: Prisma.StringFilter<"World"> | string
+  name?: Prisma.StringFilter<"World"> | string
+  createdAt?: Prisma.DateTimeFilter<"World"> | Date | string
+  inviteCode?: Prisma.StringFilter<"World"> | string
+  ownerId?: Prisma.StringFilter<"World"> | string
 }
 
 export type WorldUpsertWithWhereUniqueWithoutMembersInput = {
@@ -381,27 +528,22 @@ export type WorldUpdateManyWithWhereWithoutMembersInput = {
   data: Prisma.XOR<Prisma.WorldUpdateManyMutationInput, Prisma.WorldUncheckedUpdateManyWithoutMembersInput>
 }
 
-export type WorldScalarWhereInput = {
-  AND?: Prisma.WorldScalarWhereInput | Prisma.WorldScalarWhereInput[]
-  OR?: Prisma.WorldScalarWhereInput[]
-  NOT?: Prisma.WorldScalarWhereInput | Prisma.WorldScalarWhereInput[]
-  id?: Prisma.StringFilter<"World"> | string
-  name?: Prisma.StringFilter<"World"> | string
-  createdAt?: Prisma.DateTimeFilter<"World"> | Date | string
-}
-
 export type WorldCreateWithoutEnchantmentsInput = {
   id?: string
   name: string
   createdAt?: Date | string
-  members?: Prisma.UserCreateNestedManyWithoutWorldsInput
+  inviteCode?: string
+  owner: Prisma.UserCreateNestedOneWithoutOwnedWorldsInput
+  members?: Prisma.UserCreateNestedManyWithoutMemberWorldsInput
 }
 
 export type WorldUncheckedCreateWithoutEnchantmentsInput = {
   id?: string
   name: string
   createdAt?: Date | string
-  members?: Prisma.UserUncheckedCreateNestedManyWithoutWorldsInput
+  inviteCode?: string
+  ownerId: string
+  members?: Prisma.UserUncheckedCreateNestedManyWithoutMemberWorldsInput
 }
 
 export type WorldCreateOrConnectWithoutEnchantmentsInput = {
@@ -424,20 +566,58 @@ export type WorldUpdateWithoutEnchantmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.UserUpdateManyWithoutWorldsNestedInput
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedWorldsNestedInput
+  members?: Prisma.UserUpdateManyWithoutMemberWorldsNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutEnchantmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.UserUncheckedUpdateManyWithoutWorldsNestedInput
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  members?: Prisma.UserUncheckedUpdateManyWithoutMemberWorldsNestedInput
+}
+
+export type WorldCreateManyOwnerInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  inviteCode?: string
+}
+
+export type WorldUpdateWithoutOwnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  members?: Prisma.UserUpdateManyWithoutMemberWorldsNestedInput
+  enchantments?: Prisma.EnchantmentEntryUpdateManyWithoutWorldNestedInput
+}
+
+export type WorldUncheckedUpdateWithoutOwnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  members?: Prisma.UserUncheckedUpdateManyWithoutMemberWorldsNestedInput
+  enchantments?: Prisma.EnchantmentEntryUncheckedUpdateManyWithoutWorldNestedInput
+}
+
+export type WorldUncheckedUpdateManyWithoutOwnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type WorldUpdateWithoutMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedWorldsNestedInput
   enchantments?: Prisma.EnchantmentEntryUpdateManyWithoutWorldNestedInput
 }
 
@@ -445,6 +625,8 @@ export type WorldUncheckedUpdateWithoutMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   enchantments?: Prisma.EnchantmentEntryUncheckedUpdateManyWithoutWorldNestedInput
 }
 
@@ -452,6 +634,8 @@ export type WorldUncheckedUpdateManyWithoutMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteCode?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -498,6 +682,9 @@ export type WorldSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   id?: boolean
   name?: boolean
   createdAt?: boolean
+  inviteCode?: boolean
+  ownerId?: boolean
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   members?: boolean | Prisma.World$membersArgs<ExtArgs>
   enchantments?: boolean | Prisma.World$enchantmentsArgs<ExtArgs>
   _count?: boolean | Prisma.WorldCountOutputTypeDefaultArgs<ExtArgs>
@@ -507,32 +694,46 @@ export type WorldSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   name?: boolean
   createdAt?: boolean
+  inviteCode?: boolean
+  ownerId?: boolean
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["world"]>
 
 export type WorldSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   createdAt?: boolean
+  inviteCode?: boolean
+  ownerId?: boolean
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["world"]>
 
 export type WorldSelectScalar = {
   id?: boolean
   name?: boolean
   createdAt?: boolean
+  inviteCode?: boolean
+  ownerId?: boolean
 }
 
-export type WorldOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt", ExtArgs["result"]["world"]>
+export type WorldOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "inviteCode" | "ownerId", ExtArgs["result"]["world"]>
 export type WorldInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   members?: boolean | Prisma.World$membersArgs<ExtArgs>
   enchantments?: boolean | Prisma.World$enchantmentsArgs<ExtArgs>
   _count?: boolean | Prisma.WorldCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type WorldIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type WorldIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type WorldIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type WorldIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
 
 export type $WorldPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "World"
   objects: {
+    owner: Prisma.$UserPayload<ExtArgs>
     members: Prisma.$UserPayload<ExtArgs>[]
     enchantments: Prisma.$EnchantmentEntryPayload<ExtArgs>[]
   }
@@ -540,6 +741,8 @@ export type $WorldPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     id: string
     name: string
     createdAt: Date
+    inviteCode: string
+    ownerId: string
   }, ExtArgs["result"]["world"]>
   composites: {}
 }
@@ -934,6 +1137,7 @@ readonly fields: WorldFieldRefs;
  */
 export interface Prisma__WorldClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   members<T extends Prisma.World$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   enchantments<T extends Prisma.World$enchantmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$enchantmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnchantmentEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -968,6 +1172,8 @@ export interface WorldFieldRefs {
   readonly id: Prisma.FieldRef<"World", 'String'>
   readonly name: Prisma.FieldRef<"World", 'String'>
   readonly createdAt: Prisma.FieldRef<"World", 'DateTime'>
+  readonly inviteCode: Prisma.FieldRef<"World", 'String'>
+  readonly ownerId: Prisma.FieldRef<"World", 'String'>
 }
     
 
@@ -1217,6 +1423,10 @@ export type WorldCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    */
   data: Prisma.WorldCreateManyInput | Prisma.WorldCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorldIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1287,6 +1497,10 @@ export type WorldUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many Worlds to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorldIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

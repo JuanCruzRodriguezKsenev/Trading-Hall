@@ -679,7 +679,9 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const WorldScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  inviteCode: 'inviteCode',
+  ownerId: 'ownerId'
 } as const
 
 export type WorldScalarFieldEnum = (typeof WorldScalarFieldEnum)[keyof typeof WorldScalarFieldEnum]

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers"; // Para leer la cookie
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
 
@@ -11,10 +11,10 @@ async function getUserFromRequest() {
   if (!token) return null;
 
   const payload = await verifyToken(token.value);
-  return payload; // { userId, username } o null
+  return payload; // { userId, username }
 }
 
-// 1. GET: Obtener mis mundos
+// 1. GET: Obtener mis mundos (Propios + Compartidos)
 export async function GET() {
   try {
     const user = await getUserFromRequest();
@@ -23,16 +23,21 @@ export async function GET() {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     }
 
-    // Buscamos mundos donde el usuario esté en la lista de 'members'
+    // Buscamos mundos donde seas Dueño (ownerId) O Miembro (members list)
     const worlds = await prisma.world.findMany({
       where: {
-        members: {
-          some: { id: user.userId },
-        },
+        OR: [
+          { ownerId: user.userId }, // Soy el dueño
+          { members: { some: { id: user.userId } } }, // Soy colaborador
+        ],
       },
       include: {
+        // Incluimos el nombre del dueño para mostrarlo en la tarjeta ("Creado por Juan")
+        owner: {
+          select: { username: true },
+        },
         _count: {
-          select: { members: true }, // Opcional: Para saber cuántos miembros hay
+          select: { members: true },
         },
       },
       orderBy: { createdAt: "desc" },
@@ -63,10 +68,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Creamos el mundo y conectamos al creador en el mismo paso
+    // Creamos el mundo asignando el ownerId obligatorio
+    // y conectando al usuario también como miembro
     const newWorld = await prisma.world.create({
       data: {
         name,
+        ownerId: user.userId, // <--- NUEVO: Campo obligatorio por el Schema
         members: {
           connect: { id: user.userId },
         },
