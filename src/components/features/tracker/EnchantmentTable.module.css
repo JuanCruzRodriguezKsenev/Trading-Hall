@@ -2,23 +2,21 @@
   background: var(--mc-bg-card);
   border: 1px solid var(--mc-border);
   border-radius: 12px;
-  /* Importante: asegura que el contenedor ocupe todo */
-  width: 100%; 
-  overflow-x: auto;
+  width: 100%;
+  overflow-x: auto; /* Mantenemos scroll por seguridad */
 }
 
 .table {
-  /* ¡ESTA ES LA CLAVE! */
-  width: 100%; 
-  border-collapse: separate; /* Usamos separate para poder redondear bordes si queremos */
+  width: 100%;
+  border-collapse: separate;
   border-spacing: 0;
-  table-layout: fixed; /* Mantiene las columnas estables */
+  table-layout: fixed;
 }
 
-/* Distribución de Columnas (Total 100%) */
-.colName { width: 40%; }  /* Nombre ancho */
+/* Distribución Desktop */
+.colName { width: 40%; }
 .colLevel { width: 20%; text-align: center; }
-.colPrice { width: 25%; text-align: center; } /* Un poco más espacio para el precio */
+.colPrice { width: 25%; text-align: center; }
 .colState { width: 15%; text-align: right; }
 
 .table th {
@@ -29,5 +27,19 @@
   font-size: 0.75rem;
   letter-spacing: 0.05em;
   padding: 1rem;
-  text-align: inherit; /* Hereda la alineación de .colX */
+  text-align: inherit;
+}
+
+/* --- MOBILE VIEW (Transformación a Cards) --- */
+@media (max-width: 768px) {
+  /* Ocultamos la cabecera de la tabla */
+  .table thead {
+    display: none;
+  }
+
+  /* La tabla y el cuerpo se comportan como bloques */
+  .table, .table tbody {
+    display: block;
+    width: 100%;
+  }
 }
