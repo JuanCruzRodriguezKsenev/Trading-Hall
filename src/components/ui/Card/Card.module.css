@@ -1,0 +1,11 @@
+.card {
+  background-color: var(--mc-bg-card);
+  border: 1px solid var(--mc-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.card:hover {
+  border-color: var(--mc-border-hover);
+}

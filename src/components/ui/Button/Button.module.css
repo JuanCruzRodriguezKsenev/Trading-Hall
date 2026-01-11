@@ -1,0 +1,80 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-family: inherit;
+  text-decoration: none; /* Por si lo usas como Link */
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* --- VARIANTE PRIMARY (Diamante / Acción Principal) --- */
+.primary {
+  background-color: var(--mc-diamond);
+  color: #000; /* Texto oscuro para contraste */
+  box-shadow: 0 4px 0 #0984e3; /* Efecto 3D sutil */
+}
+
+.primary:hover:not(:disabled) {
+  background-color: #54a0ff;
+}
+
+.primary:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #0984e3;
+}
+
+/* --- VARIANTE SECONDARY (Gris / Cancelar / Neutro) --- */
+.secondary {
+  background-color: var(--mc-bg-card);
+  color: var(--mc-text-primary);
+  border: 1px solid var(--mc-border);
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: var(--mc-border);
+  border-color: var(--mc-text-secondary);
+}
+
+/* --- VARIANTE DANGER (Redstone / Borrar / Salir) --- */
+.danger {
+  background-color: var(--mc-redstone);
+  color: #fff;
+  box-shadow: 0 4px 0 #d63031;
+}
+
+.danger:hover:not(:disabled) {
+  background-color: #ff5e57;
+}
+
+.danger:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #d63031;
+}
+
+/* --- SPINNER DE CARGA --- */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-left-color: currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,29 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--mc-bg-card);
+  border-bottom: 2px solid var(--mc-border);
+  height: 70px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--mc-emerald);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.username {
+  color: var(--mc-diamond);
+  font-weight: 600;
+}

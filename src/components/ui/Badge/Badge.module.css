@@ -1,0 +1,16 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Variantes de color */
+.default { background: var(--mc-border); color: var(--mc-text-secondary); }
+.success { background: rgba(85, 239, 196, 0.15); color: var(--mc-emerald); border: 1px solid var(--mc-emerald); }
+.info { background: rgba(116, 185, 255, 0.15); color: var(--mc-diamond); border: 1px solid var(--mc-diamond); }
+.warning { background: rgba(255, 234, 167, 0.15); color: var(--mc-gold); border: 1px solid var(--mc-gold); }

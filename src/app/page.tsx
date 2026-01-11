@@ -1,66 +1,71 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from "next/link";
+import { Button } from "@/components/ui/Button";
 
-export default function Home() {
+// ¡Asegúrate de que diga 'export default function'!
+export default function LandingPage() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        textAlign: "center",
+        padding: "2rem",
+        gap: "2rem",
+        // Un fondo oscuro elegante
+        background:
+          "radial-gradient(circle at center, #2d3436 0%, #121212 100%)",
+      }}
+    >
+      <div style={{ maxWidth: "600px" }}>
+        <h1
+          className="text-diamond"
+          style={{
+            fontSize: "3.5rem",
+            marginBottom: "1rem",
+            lineHeight: "1.1",
+          }}
+        >
+          Trading Hall <br /> Tracker
+        </h1>
+
+        <p
+          className="text-muted"
+          style={{ fontSize: "1.2rem", marginBottom: "2rem" }}
+        >
+          Organiza tu servidor de Minecraft. Controla los precios de tus
+          aldeanos, comparte la lista con tu clan y nunca más olvides quién
+          vende Mending a 1 esmeralda.
+        </p>
+
+        <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+          <Link href="/login">
+            <Button
+              variant="primary"
+              style={{ fontSize: "1.1rem", padding: "1rem 2rem" }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
+              Iniciar Sesión
+            </Button>
+          </Link>
+
+          <Link href="/register">
+            <Button
+              variant="secondary"
+              style={{ fontSize: "1.1rem", padding: "1rem 2rem" }}
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              Crear Cuenta
+            </Button>
+          </Link>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
+
+      <footer
+        style={{ marginTop: "auto", color: "#636e72", fontSize: "0.9rem" }}
+      >
+        Compatible con Minecraft Java & Bedrock
+      </footer>
     </div>
   );
 }

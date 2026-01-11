@@ -1,0 +1,54 @@
+/* src/components/features/world-select/WorldSelect.module.css */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.worldCard {
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 160px;
+}
+
+.worldCard:hover {
+  transform: translateY(-4px);
+  border-color: var(--mc-diamond);
+}
+
+.worldName {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--mc-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.worldMeta {
+  color: var(--mc-text-secondary);
+  font-size: 0.9rem;
+}
+
+.createCard {
+  border-style: dashed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.createContent {
+  text-align: center;
+  color: var(--mc-text-muted);
+}
+
+.plus {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--mc-emerald);
+}

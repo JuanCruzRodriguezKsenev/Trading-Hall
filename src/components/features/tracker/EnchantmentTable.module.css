@@ -1,0 +1,33 @@
+.tableContainer {
+  background: var(--mc-bg-card);
+  border: 1px solid var(--mc-border);
+  border-radius: 12px;
+  /* Importante: asegura que el contenedor ocupe todo */
+  width: 100%; 
+  overflow-x: auto;
+}
+
+.table {
+  /* ¡ESTA ES LA CLAVE! */
+  width: 100%; 
+  border-collapse: separate; /* Usamos separate para poder redondear bordes si queremos */
+  border-spacing: 0;
+  table-layout: fixed; /* Mantiene las columnas estables */
+}
+
+/* Distribución de Columnas (Total 100%) */
+.colName { width: 40%; }  /* Nombre ancho */
+.colLevel { width: 20%; text-align: center; }
+.colPrice { width: 25%; text-align: center; } /* Un poco más espacio para el precio */
+.colState { width: 15%; text-align: right; }
+
+.table th {
+  background-color: var(--mc-bg-input);
+  color: var(--mc-text-secondary);
+  border-bottom: 2px solid var(--mc-border);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 1rem;
+  text-align: inherit; /* Hereda la alineación de .colX */
+}

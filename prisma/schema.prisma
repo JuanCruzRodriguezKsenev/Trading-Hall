@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "@/app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// 1. EL USUARIO (Tú y tus amigos)
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String   // En un proyecto real esto se encripta, por ahora texto plano
+  
+  // "Sus Mundos": Relación con los mundos a los que pertenece
+  worlds    World[]  @relation("WorldMembers")
+}
+
+// 2. EL MUNDO (El servidor donde juegan)
+model World {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  createdAt    DateTime @default(now())
+
+  // Miembros del mundo
+  members      User[]   @relation("WorldMembers")
+  
+  // Los encantamientos de este mundo
+  enchantments EnchantmentEntry[]
+}
+
+// 3. LA ENTRADA (El dato del libro)
+model EnchantmentEntry {
+  id            String   @id @default(cuid())
+
+  // Relación con el Mundo
+  worldId       String
+  world         World    @relation(fields: [worldId], references: [id])
+  
+  // ID estático (ej: "mending", "sharpness")
+  // El "tipo" (armadura, etc) lo sacamos del frontend usando este ID
+  enchantmentId String   
+  
+  // --- TUS NUEVOS DATOS ---
+  level         Int      @default(0)
+  price         Int      @default(0)
+  villagerId    String?  // Ej: "Librero Norte", "Aldeano #4", "100/64/-300"
+  
+  // --- AUDITORÍA (Quién y Cuándo) ---
+  modifiedBy    String   // Guardamos el username del que hizo el cambio
+  modifiedAt    DateTime @default(now())
+
+  // Regla: No duplicar el mismo encantamiento en el mismo mundo
+  @@unique([worldId, enchantmentId])
+}

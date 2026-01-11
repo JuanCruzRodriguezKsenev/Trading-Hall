@@ -1,14 +1,32 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --- PALETA MINECRAFT MODERNIZADA --- */
+  
+  /* Fondos (Based on Obsidian & Deepslate) */
+  --mc-bg-main: #121212;       /* Fondo de pantalla */
+  --mc-bg-card: #1e1e1e;       /* Fondo de tarjetas/modales */
+  --mc-bg-input: #2d2d2d;      /* Fondo de inputs */
+  
+  /* Bordes (Stone) */
+  --mc-border: #3f3f3f;        /* Bordes sutiles */
+  --mc-border-hover: #575757;  /* Bordes al pasar el mouse */
+
+  /* Textos */
+  --mc-text-primary: #ededed;  /* Texto principal (Blanco suave) */
+  --mc-text-secondary: #b3b3b3;/* Texto secundario (Gris claro) */
+  --mc-text-muted: #6e6e6e;    /* Texto deshabilitado */
+
+  /* Colores de Acción (Items) */
+  --mc-emerald: #55efc4;       /* Éxito, Precios, Dinero */
+  --mc-diamond: #74b9ff;       /* Primario, Links, Info */
+  --mc-redstone: #ff7675;      /* Error, Borrar, Peligro */
+  --mc-gold: #ffeaa7;          /* Advertencia, Destacado */
+  --mc-ender: #a29bfe;         /* Acentos especiales */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Opcional: Si quisieras modo claro en el futuro, 
+   solo redefinirías las variables aquí dentro.
+   Por ahora, forzamos el look Dark que queda mejor para Gaming.
+*/
 
 html,
 body {
@@ -17,13 +35,15 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--mc-text-primary);
+  background: var(--mc-bg-main);
+  /* Fuente legible moderna. Si quieres pixel art, importa una fuente como 'Press Start 2P' */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Reset básico mejorado */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -31,12 +51,36 @@ body {
 }
 
 a {
-  color: inherit;
+  color: var(--mc-diamond);
   text-decoration: none;
+  transition: opacity 0.2s;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+a:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+/* --- CLASES DE UTILIDAD GLOBALES --- */
+/* Útiles para colorear texto rápido sin crear un módulo CSS */
+
+.text-emerald { color: var(--mc-emerald); }
+.text-diamond { color: var(--mc-diamond); }
+.text-redstone { color: var(--mc-redstone); }
+.text-gold { color: var(--mc-gold); }
+.text-muted { color: var(--mc-text-muted); }
+
+/* Scrollbar estilo Dark (Solo funciona en navegadores basados en Webkit como Chrome/Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--mc-bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--mc-border);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mc-border-hover);
 }

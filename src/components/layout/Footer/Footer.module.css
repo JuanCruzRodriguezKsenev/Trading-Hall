@@ -1,0 +1,8 @@
+.footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--mc-text-muted);
+  font-size: 0.85rem;
+  margin-top: auto; /* Empuja el footer al fondo si hay poco contenido */
+  border-top: 1px solid var(--mc-border);
+}

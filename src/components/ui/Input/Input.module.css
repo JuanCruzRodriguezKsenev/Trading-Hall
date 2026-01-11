@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--mc-text-secondary);
+}
+
+.input {
+  padding: 0.75rem 1rem;
+  background-color: var(--mc-bg-input);
+  border: 1px solid var(--mc-border);
+  border-radius: 6px;
+  color: var(--mc-text-primary);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--mc-diamond);
+  box-shadow: 0 0 0 2px rgba(116, 185, 255, 0.2);
+}
+
+.errorInput {
+  border-color: var(--mc-redstone);
+}
+
+.errorText {
+  font-size: 0.85rem;
+  color: var(--mc-redstone);
+}
