@@ -1,9 +1,11 @@
 import useSWR from "swr";
 import { apiCall } from "@/utils/api-client";
-import { WorldWithMembers, UIEnchantment } from "@/types";
+// 👇 CAMBIO 1: Importamos 'World' (nuestra interfaz personalizada), no 'WorldWithMembers'
+import { World, UIEnchantment } from "@/types";
 
 interface WorldDataResponse {
-  world: WorldWithMembers | null;
+  // 👇 CAMBIO 2: Usamos 'World' aquí también
+  world: World | null;
   enchantments: UIEnchantment[];
   isLoading: boolean;
   isError: any;
@@ -13,7 +15,6 @@ interface WorldDataResponse {
 const fetcher = (url: string) => apiCall<any>(url);
 
 export function useWorldData(worldId: string | undefined): WorldDataResponse {
-  // CORRECCIÓN AQUÍ: Agregamos "/items" al final de la URL 👇
   const { data, error, isLoading, mutate } = useSWR(
     worldId ? `/api/world/${worldId}/items` : null,
     fetcher,

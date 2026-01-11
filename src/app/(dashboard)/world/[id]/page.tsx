@@ -170,6 +170,10 @@ export default function TrackerPage() {
     );
   if (!world) return <div className="text-redstone">Mundo no encontrado.</div>;
 
+  // Lógica para mostrar colaboradores (excluyendo al dueño si aparece duplicado)
+  const collaborators =
+    world.members?.filter((m: any) => m.id !== world.ownerId) || [];
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
       {/* 👇 CAMBIA ESTE BLOQUE DEL HEADER 👇 */}
@@ -184,13 +188,27 @@ export default function TrackerPage() {
           <h1 style={{ fontSize: "2rem", color: "var(--mc-emerald)" }}>
             {world.name}
           </h1>
-          <p className="text-muted">Trading Hall Tracker</p>
+
+          {/* Info de Usuarios */}
+          <div
+            className="text-sm text-muted"
+            style={{ marginTop: "0.5rem", color: "#a1a1aa" }}
+          >
+            <span style={{ marginRight: "1rem" }}>
+              👑 <strong>{world.ownerName || "Dueño"}</strong>
+            </span>
+
+            {collaborators.length > 0 && (
+              <span>
+                👥 {collaborators.map((m: any) => m.username).join(", ")}
+              </span>
+            )}
+          </div>
         </div>
 
-        {/* Botón de Invitar (Solo si existe código) */}
+        {/* Botón de Invitar */}
         {world.inviteCode && <InviteButton inviteCode={world.inviteCode} />}
       </div>
-      {/* 👆 FIN DEL CAMBIO 👆 */}
 
       <QuickCheck worldId={worldId} data={enchantments} onRefresh={mutate} />
 

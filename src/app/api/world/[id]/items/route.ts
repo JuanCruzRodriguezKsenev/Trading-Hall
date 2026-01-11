@@ -14,7 +14,7 @@ async function getUserFromRequest() {
 
 // --- ENDPOINTS ---
 
-// 1. GET: Traer items + Datos del mundo (incluyendo inviteCode)
+// 1. GET: Traer items + Datos del mundo (incluyendo colaboradores)
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -26,8 +26,7 @@ export async function GET(
     if (!user)
       return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
-    // Hacemos una sola consulta eficiente:
-    // Buscamos el mundo SOLO si el usuario es Dueño O Miembro
+    // Buscamos el mundo y verificamos permisos en la misma consulta
     const worldData = await prisma.world.findFirst({
       where: {
         id: id,
@@ -39,26 +38,37 @@ export async function GET(
       select: {
         id: true,
         name: true,
-        inviteCode: true, // 👈 ¡ESTO ES LO QUE TE FALTABA!
+        inviteCode: true,
         ownerId: true,
-        enchantments: true, // Traemos los items aquí mismo
+        // 👇 Traemos el nombre del dueño
+        owner: {
+          select: { username: true },
+        },
+        // 👇 Traemos la lista de miembros (id y username)
+        members: {
+          select: { username: true, id: true },
+        },
+        enchantments: true, // Traemos los items del mundo
       },
     });
 
     if (!worldData) {
       return NextResponse.json(
-        { error: "Mundo no encontrado o no tienes permiso" },
+        { error: "Mundo no encontrado o acceso denegado" },
         { status: 404 }
       );
     }
 
-    // Devolvemos la estructura exacta que espera tu frontend
+    // Mapeamos la respuesta para que el frontend la reciba limpia
     return NextResponse.json({
       world: {
         id: worldData.id,
         name: worldData.name,
         inviteCode: worldData.inviteCode,
         ownerId: worldData.ownerId,
+        // 👇 Agregamos estos campos para la UI de colaboradores
+        ownerName: worldData.owner.username,
+        members: worldData.members,
       },
       enchantments: worldData.enchantments,
     });
@@ -80,7 +90,7 @@ export async function POST(
     if (!user)
       return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
-    // Verificar permisos antes de escribir
+    // Verificar permisos antes de escribir (Dueño o Miembro)
     const hasAccess = await prisma.world.count({
       where: {
         id: id,
@@ -93,21 +103,27 @@ export async function POST(
 
     if (hasAccess === 0) {
       return NextResponse.json(
-        { error: "No tienes permiso para editar" },
+        { error: "No tienes permiso para editar este mundo" },
         { status: 403 }
       );
     }
 
-    // Recibimos los datos
+    // Recibimos los datos del formulario
     const { enchantmentId, level, price, villagerId } = await request.json();
 
-    // Validaciones
+    // Validaciones básicas
     if (!enchantmentId)
-      return NextResponse.json({ error: "Falta ID" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Falta ID del encantamiento" },
+        { status: 400 }
+      );
     if (price < 0)
-      return NextResponse.json({ error: "Precio negativo" }, { status: 400 });
+      return NextResponse.json(
+        { error: "El precio no puede ser negativo" },
+        { status: 400 }
+      );
 
-    // UPSERT
+    // Guardar en la base de datos (Upsert)
     const savedItem = await prisma.enchantmentEntry.upsert({
       where: {
         worldId_enchantmentId: {

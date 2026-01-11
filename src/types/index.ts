@@ -9,19 +9,25 @@ import {
 // ==========================================
 // 1. USUARIO
 // ==========================================
-// Exportamos el tipo base por si acaso
 export type User = PrismaUser;
-
-// "SafeUser": Sin password, para usar en el Frontend
 export type SafeUser = Omit<PrismaUser, "password">;
 
 // ==========================================
-// 2. MUNDO
+// 2. MUNDO (AQUÍ ESTÁ EL CAMBIO CLAVE)
 // ==========================================
-// Exportamos el tipo base (soluciona el error "declared but never read")
-export type World = PrismaWorld;
 
-// "WorldWithMembers": El tipo complejo que incluye el array de miembros
+// En lugar de ser igual a PrismaWorld, lo "extendemos"
+export interface World extends PrismaWorld {
+  // Estos campos ya vienen de PrismaWorld, pero al extender
+  // podemos agregar los nuevos que manda la API:
+
+  ownerName?: string; // <--- Soluciona el error de ownerName
+
+  // Definimos members como un array de objetos con id y username
+  members?: { id: string; username: string }[];
+}
+
+// Mantenemos este por si lo usas en otro lado del backend
 export type WorldWithMembers = Prisma.WorldGetPayload<{
   include: { members: true };
 }>;
