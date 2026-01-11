@@ -1,10 +1,9 @@
 import useSWR from "swr";
 import { apiCall } from "@/utils/api-client";
-// 👇 CAMBIO 1: Importamos 'World' (nuestra interfaz personalizada), no 'WorldWithMembers'
+// Importamos nuestros tipos personalizados para evitar errores de TS con 'ownerName'
 import { World, UIEnchantment } from "@/types";
 
 interface WorldDataResponse {
-  // 👇 CAMBIO 2: Usamos 'World' aquí también
   world: World | null;
   enchantments: UIEnchantment[];
   isLoading: boolean;
@@ -19,8 +18,25 @@ export function useWorldData(worldId: string | undefined): WorldDataResponse {
     worldId ? `/api/world/${worldId}/items` : null,
     fetcher,
     {
+      // --- ESTRATEGIA DE TIEMPO REAL EFICIENTE ---
+
+      // 1. Sondeo cada 5 segundos:
+      // Suficiente para ver cambios de amigos sin bombardear la base de datos.
+      refreshInterval: 5000,
+
+      // 2. Ahorro de recursos:
+      // Si el usuario minimiza la ventana o cambia de pestaña, DEJA de pedir datos.
+      // Esto protege tu cuota gratuita de Neon/Vercel.
+      refreshWhenHidden: false,
+      refreshWhenOffline: false,
+
+      // 3. Reactividad instantánea:
+      // Apenas el usuario vuelve a mirar la pestaña, actualiza los datos inmediatamente.
       revalidateOnFocus: true,
-      dedupingInterval: 5000,
+      revalidateOnReconnect: true,
+
+      // Evita peticiones duplicadas muy seguidas
+      dedupingInterval: 4000,
     }
   );
 
