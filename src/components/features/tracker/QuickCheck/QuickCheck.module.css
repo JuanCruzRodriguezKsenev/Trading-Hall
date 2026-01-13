@@ -1,0 +1,202 @@
+.card {
+  background-color: var(--mc-bg-card);
+  border: 1px solid var(--mc-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.header {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: var(--mc-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- GRID ESTABLE --- */
+.grid {
+  display: grid;
+  /* 1fr: El Select ocupa el espacio restante.
+     auto: Los otros elementos mandan su propio ancho.
+  */
+  grid-template-columns: 1fr auto auto auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+/* --- ESTILOS DE INPUTS --- */
+
+/* 1. Quitamos flechas (Spinners) */
+.inputNumber::-webkit-outer-spin-button,
+.inputNumber::-webkit-inner-spin-button,
+.inputPrice::-webkit-outer-spin-button,
+.inputPrice::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.inputNumber, .inputPrice {
+  -moz-appearance: textfield;
+}
+
+/* 2. Configuración Base (Altura compacta 36px) */
+.select, .inputNumber, .priceWrapper, .button {
+  height: 36px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+/* --- COLUMNA 1: SELECT --- */
+.select {
+  width: 100%;
+  padding: 0 0.8rem;
+  border: 1px solid var(--mc-border);
+  background: var(--mc-bg-input);
+  color: var(--mc-text-primary);
+  outline: none;
+  cursor: pointer;
+  
+  /* Text overflow seguro */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.select:focus {
+  border-color: var(--mc-diamond);
+}
+
+/* --- COLUMNA 2: NIVEL (Agrandado) --- */
+.inputNumber {
+  width: 90px; /* ANTES: 70px -> AHORA: 90px */
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid transparent;
+  color: var(--mc-text-primary);
+  text-align: center;
+  outline: none;
+}
+.inputNumber:focus {
+  background-color: var(--mc-bg-input);
+  border-color: var(--mc-diamond);
+}
+
+/* --- COLUMNA 3: PRECIO (Agrandado) --- */
+.priceWrapper {
+  width: 130px; /* ANTES: 100px -> AHORA: 130px */
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid transparent;
+  padding-left: 10px;
+  position: relative;
+}
+
+.priceWrapper span {
+  color: var(--mc-text-secondary);
+  pointer-events: none;
+  font-size: 0.9rem;
+}
+
+.priceWrapper:focus-within {
+  background-color: var(--mc-bg-input);
+  border-color: var(--mc-diamond);
+}
+
+.inputPrice {
+  background-color: transparent !important;
+  border: none !important;
+  width: 100%;
+  height: 100%;
+  text-align: right;
+  padding-right: 10px;
+  color: var(--mc-text-primary);
+  font-weight: 600;
+  outline: none;
+}
+
+/* --- COLUMNA 4: BOTÓN (Equilibrado) --- */
+.button {
+  padding: 0 1.5rem;
+  min-width: 120px; /* NUEVO: Ancho mínimo para que no se vea chico */
+  background-color: var(--mc-emerald);
+  color: #000;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.button:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+.button:active:not(:disabled) { transform: translateY(0); }
+.button:disabled { 
+  background-color: var(--mc-border); 
+  opacity: 0.6; 
+  cursor: not-allowed;
+  color: var(--mc-text-secondary);
+}
+
+/* --- LABELS --- */
+.label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--mc-text-secondary);
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- MENSAJES --- */
+.comparisonContainer {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: rgba(0,0,0,0.2);
+  border: 1px solid var(--mc-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.currentInfo {
+  font-size: 0.85rem;
+  color: var(--mc-text-secondary);
+  border-bottom: 1px solid var(--mc-border);
+  padding-bottom: 0.5rem;
+}
+
+.feedbackMsg {
+  font-size: 0.95rem;
+  font-weight: bold;
+}
+
+.good { color: var(--mc-emerald); }
+.bad { color: var(--mc-redstone); }
+.warn { color: var(--mc-gold); }
+.neutral { color: var(--mc-text-secondary); }
+
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 768px) {
+  .grid { 
+    grid-template-columns: 1fr 1fr; 
+  }
+  
+  .fullWidthMobile { 
+    grid-column: 1 / -1; 
+  }
+
+  .inputNumber, .priceWrapper {
+    width: 100%; 
+  }
+
+  .button { 
+    grid-column: 1 / -1; 
+    margin-top: 0.5rem; 
+  }
+}

@@ -3,7 +3,7 @@ import React from "react";
 import { MINECRAFT_ENCHANTS } from "@/lib/constants";
 import { UIEnchantment } from "@/types";
 import { apiCall } from "@/utils/api-client";
-import EnchantmentRow from "./EnchantmentRow";
+import EnchantmentRow from "../EnchantmentRow";
 import styles from "./EnchantmentTable.module.css";
 
 interface Props {

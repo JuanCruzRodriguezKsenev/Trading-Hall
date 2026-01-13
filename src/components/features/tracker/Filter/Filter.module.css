@@ -5,92 +5,154 @@
   gap: 1rem;
   padding: 0.8rem 1rem;
   margin-bottom: 2rem;
-  background-color: rgba(15, 23, 42, 0.8); /* Slate muy oscuro */
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  /* FONDO Y BORDE GLOBAL */
+  background-color: var(--mc-bg-card); 
+  border: 1px solid var(--mc-border);
+  
   border-radius: 16px;
   align-items: center;
   backdrop-filter: blur(10px);
-  position: relative; /* Necesario para el menú flotante */
+  position: relative;
   z-index: 50;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
 }
 
-/* --- SEARCH BAR (Flexible) --- */
+/* --- SEARCH BAR --- */
 .searchWrapper {
   display: flex;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--mc-bg-input);
+  border: 1px solid var(--mc-border);
   border-radius: 10px;
   padding: 0 0.8rem;
-  flex-grow: 1;
-
-  min-width: 12rem; /* Elástico y respetuoso con la fuente */
   
-  transition: border-color 0.2s;
+  /* En escritorio crece para ocupar espacio, pero tiene un mínimo */
+  flex-grow: 1;
+  min-width: 200px;
+  
+  transition: border-color 0.2s, box-shadow 0.2s;
+  height: 40px;
 }
 
 .searchWrapper:focus-within {
-  border-color: #3b82f6;
+  border-color: var(--mc-diamond);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.2);
 }
 
 .searchIcon {
-  color: #94a3b8;
+  color: var(--mc-text-muted);
   width: 1.2rem;
   height: 1.2rem;
+  flex-shrink: 0; /* Evita que el icono se aplaste */
 }
 
 .searchInput {
   background: transparent;
   border: none;
-  color: white;
-  padding: 0.8rem;
+  color: var(--mc-text-primary);
+  padding: 0 0.8rem;
   font-size: 0.95rem;
   outline: none;
   width: 100%;
+  font-family: inherit;
+  height: 100%;
+}
+
+.searchInput::placeholder {
+  color: var(--mc-text-muted);
 }
 
 /* --- BOTÓN DE FILTROS (Trigger) --- */
 .filterTriggerBtn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  background-color: #3b82f6;
-  color: white;
+  background-color: var(--mc-diamond);
+  color: #000;
   border: none;
-  padding: 0.7rem 1.2rem;
+  padding: 0 1.2rem;
+  height: 40px; /* Altura fija consistente */
   border-radius: 10px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: filter 0.2s;
+  white-space: nowrap; /* El texto no se rompe */
 }
 
 .filterTriggerBtn:hover {
-  background-color: #2563eb;
+  filter: brightness(1.1);
 }
 
 .badge {
-  background-color: white;
-  color: #3b82f6;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: inherit;
   font-size: 0.75rem;
-  padding: 0.1rem 0.4rem;
+  padding: 0.1rem 0.5rem;
   border-radius: 99px;
   font-weight: 800;
+}
+
+/* --- SORTING AREA --- */
+.sortContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto; /* En desktop empuja a la derecha */
+}
+
+.sortSelect {
+  background-color: var(--mc-bg-input);
+  color: var(--mc-text-primary);
+  border: 1px solid var(--mc-border);
+  padding: 0 1rem;
+  height: 40px;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.sortSelect:focus {
+  border-color: var(--mc-diamond);
+}
+
+.sortDirectionBtn {
+  background-color: var(--mc-bg-input);
+  border: 1px solid var(--mc-border);
+  color: var(--mc-text-muted);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.sortDirectionBtn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--mc-text-primary);
+  border-color: var(--mc-text-primary);
 }
 
 /* --- MENÚ FLOTANTE (POPOVER) --- */
 .popover {
   position: absolute;
-  top: 110%; /* Debajo de la barra */
+  top: calc(100% + 10px);
   left: 0;
-  background-color: #1e293b; /* Slate 800 */
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--mc-bg-card);
+  border: 1px solid var(--mc-border);
   border-radius: 16px;
   padding: 1.5rem;
-
-  width: 20rem; /* Aprox 320px base, pero escala si el usuario sube el zoom */
-  max-width: 90vw; /* NUNCA ocupará más del 90% del ancho de la pantalla */
-
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  width: 20rem;
+  max-width: 90vw;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.8);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -99,17 +161,10 @@
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Secciones dentro del Popover */
 .filterSection {
   display: flex;
   flex-direction: column;
@@ -119,12 +174,11 @@
 .sectionTitle {
   font-size: 0.75rem;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: var(--mc-text-muted);
   font-weight: 700;
   letter-spacing: 0.05em;
 }
 
-/* PILLS (Las pastillas seleccionables) */
 .pillsContainer {
   display: flex;
   flex-wrap: wrap;
@@ -132,69 +186,31 @@
 }
 
 .pill {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
+  background-color: var(--mc-bg-input);
+  border: 1px solid var(--mc-border);
+  color: var(--mc-text-secondary);
   padding: 0.4rem 1rem;
-  border-radius: 99px; /* Redondas */
+  border-radius: 99px;
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
+  font-weight: 500;
 }
 
 .pill:hover {
   background-color: rgba(255, 255, 255, 0.1);
+  color: var(--mc-text-primary);
 }
 
-/* Estado Activo de la Pill */
 .pillActive {
-  background-color: #3b82f6;
-  border-color: #3b82f6;
-  color: white;
-  font-weight: 600;
+  background-color: var(--mc-diamond);
+  border-color: var(--mc-diamond);
+  color: #000;
+  font-weight: 700;
 }
 
-/* --- SORTING AREA (Derecha) --- */
-.sortContainer {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-left: auto; /* Empuja a la derecha si hay espacio */
-}
-
-.sortSelect {
-  background-color: rgba(0, 0, 0, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0.7rem 1rem;
-  border-radius: 10px;
-  outline: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.sortDirectionBtn {
-  background-color: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
-  width: 2.8rem;
-  height: 2.8rem;
-  border-radius: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.sortDirectionBtn:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: white;
-}
-
-/* Footer del Popover (Reset) */
 .popoverFooter {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--mc-border);
   padding-top: 1rem;
   display: flex;
   justify-content: flex-end;
@@ -203,8 +219,47 @@
 .resetBtn {
   background: none;
   border: none;
-  color: #ef4444; /* Rojo */
+  color: var(--mc-redstone);
   font-size: 0.85rem;
   cursor: pointer;
   text-decoration: underline;
+  font-weight: 600;
+}
+
+/* =========================================
+   📱 MOBILE RESPONSIVE FIX
+   ========================================= */
+@media (max-width: 768px) {
+  .container {
+    gap: 0.75rem; /* Menos espacio entre filas */
+    padding: 0.75rem;
+  }
+
+  /* 1. BUSCADOR: Ocupa toda la primera fila */
+  .searchWrapper {
+    width: 100%;       /* Fuerza salto de línea */
+    flex-basis: 100%;  /* Ocupa todo el ancho base */
+    order: 1;          /* Asegura que va primero */
+  }
+
+  /* 2. BOTÓN FILTER: Ocupa la mitad izquierda abajo */
+  .filterTriggerBtn {
+    order: 2;
+    flex-grow: 1;      /* Se estira para llenar espacio */
+  }
+
+  /* 3. SORT: Ocupa la mitad derecha abajo */
+  .sortContainer {
+    order: 3;
+    margin-left: 0;    /* Quitamos el margen automático */
+    flex-grow: 1;      /* Se estira para llenar espacio */
+    justify-content: flex-end;
+    width: auto;       /* Deja que el contenido decida, o usa 100% si prefieres */
+  }
+  
+  /* El select se ajusta al espacio disponible */
+  .sortSelect {
+    width: 100%; 
+    min-width: 0; /* Permite encogerse si es necesario */
+  }
 }

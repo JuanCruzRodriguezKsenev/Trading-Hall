@@ -29,14 +29,13 @@ export default function EnchantmentRow({ definition, entry, onSave }: Props) {
     }
   };
 
-  // --- 🔒 VALIDACIÓN DE NIVEL (Igual que antes) ---
+  // --- 🔒 VALIDACIÓN DE NIVEL ---
   const handleLevelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     if (val === "") {
       setLevel(0);
       return;
     }
-
     const num = parseInt(val);
     if (isNaN(num)) return;
 
@@ -45,26 +44,19 @@ export default function EnchantmentRow({ definition, entry, onSave }: Props) {
     else setLevel(num);
   };
 
-  // --- 💰 NUEVA VALIDACIÓN DE PRECIO ---
+  // --- 💰 VALIDACIÓN DE PRECIO ---
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    // Si borra, dejamos en 0 visualmente
     if (val === "") {
       setPrice(0);
       return;
     }
-
     const num = parseInt(val);
     if (isNaN(num)) return;
 
-    // Lógica de Portero para Precio
-    if (num > MAX_PRICE) {
-      setPrice(MAX_PRICE); // Fuerza el máximo (64)
-    } else if (num < 0) {
-      setPrice(0); // No negativos
-    } else {
-      setPrice(num);
-    }
+    if (num > MAX_PRICE) setPrice(MAX_PRICE);
+    else if (num < 0) setPrice(0);
+    else setPrice(num);
   };
 
   const getRowClass = () => {
@@ -75,36 +67,36 @@ export default function EnchantmentRow({ definition, entry, onSave }: Props) {
   };
 
   const renderBadge = () => {
-    if (level === 0)
+    // Caso 1: Falta (Gris)
+    if (level === 0) {
       return (
-        <span
-          className={styles.badge}
-          style={{ color: "var(--mc-text-muted)" }}
-        >
-          FALTA
-        </span>
+        <span className={`${styles.badge} ${styles.badgeMissing}`}>FALTA</span>
       );
-    if (level === definition.maxLevel)
+    }
+
+    // Caso 2: Máximo (Verde)
+    if (level === definition.maxLevel) {
+      return <span className={`${styles.badge} ${styles.badgeMax}`}>MAX</span>;
+    }
+
+    // Caso 3: Mejora "Mid" (Dorado) - Si tiene la mitad o más del nivel
+    if (level >= definition.maxLevel / 2) {
       return (
-        <span className={styles.badge} style={{ color: "var(--mc-emerald)" }}>
-          MAX
-        </span>
+        <span className={`${styles.badge} ${styles.badgeMid}`}>MEJORA</span>
       );
-    return (
-      <span className={styles.badge} style={{ color: "var(--mc-gold)" }}>
-        MEJORA
-      </span>
-    );
+    }
+
+    // Caso 4: Mejora "Low" (Rojo) - Si tiene muy poco nivel
+    return <span className={`${styles.badge} ${styles.badgeLow}`}>MEJORA</span>;
   };
 
   return (
     <tr className={getRowClass()}>
+      {/* 1. Nombre y Metadata */}
       <td>
         <span className={styles.nameText}>{definition.name}</span>
         <div className={styles.metaContainer}>
-          <span className={styles.subText}>
-            {definition.appliesTo} • Max: {definition.maxLevel}
-          </span>
+          <span className={styles.subText}>{definition.appliesTo}</span>
           {entry?.modifiedBy && (
             <div className={styles.commitInfo}>
               <span className={styles.userDot}></span>
@@ -117,7 +109,8 @@ export default function EnchantmentRow({ definition, entry, onSave }: Props) {
         </div>
       </td>
 
-      <td style={{ textAlign: "center" }}>
+      {/* 2. Input de Nivel */}
+      <td className={styles.centerCell}>
         <input
           type="number"
           min="0"
@@ -128,20 +121,19 @@ export default function EnchantmentRow({ definition, entry, onSave }: Props) {
           className={styles.inputNumber}
           placeholder="0"
         />
-        <span style={{ opacity: 0.5, marginLeft: "4px", fontSize: "0.8rem" }}>
-          / {definition.maxLevel}
-        </span>
+        <span className={styles.maxSuffix}>/ {definition.maxLevel}</span>
       </td>
 
-      <td style={{ textAlign: "center" }}>
+      {/* 3. Input de Precio */}
+      <td className={styles.centerCell}>
         <div className={styles.priceWrapper}>
-          <span style={{ marginRight: "4px", opacity: 0.6 }}>$</span>
+          <span>$</span>
           <input
             type="number"
             min="0"
-            max={MAX_PRICE} // Sugerencia HTML
+            max={MAX_PRICE}
             value={price || ""}
-            onChange={handlePriceChange} // <--- APLICADO AQUÍ
+            onChange={handlePriceChange}
             onBlur={handleBlur}
             className={styles.inputPrice}
             placeholder="-"
@@ -149,7 +141,8 @@ export default function EnchantmentRow({ definition, entry, onSave }: Props) {
         </div>
       </td>
 
-      <td style={{ textAlign: "right" }}>{renderBadge()}</td>
+      {/* 4. Badge de Estado */}
+      <td className={styles.rightCell}>{renderBadge()}</td>
     </tr>
   );
 }

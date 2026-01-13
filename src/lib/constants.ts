@@ -12,14 +12,14 @@ export const MINECRAFT_ENCHANTS: EnchantmentDef[] = [
   // --- GENERAL / HERRAMIENTAS ---
   {
     id: "mending",
-    name: "Reparación (Mending)",
+    name: "Reparación", // ✅ Cambiado
     maxLevel: 1,
     type: "special",
     appliesTo: "Todo",
   },
   {
     id: "unbreaking",
-    name: "Irrompibilidad (Unbreaking)",
+    name: "Irrompibilidad", // ✅ Cambiado
     maxLevel: 3,
     type: "special",
     appliesTo: "Todo",
@@ -33,7 +33,7 @@ export const MINECRAFT_ENCHANTS: EnchantmentDef[] = [
   },
   {
     id: "silk_touch",
-    name: "Toque de Seda (Silk Touch)",
+    name: "Toque de Seda", // ✅ Cambiado
     maxLevel: 1,
     type: "tool",
     appliesTo: "Herramientas",
@@ -98,7 +98,7 @@ export const MINECRAFT_ENCHANTS: EnchantmentDef[] = [
   },
   {
     id: "thorns",
-    name: "Espinas (Thorns)",
+    name: "Espinas", // ✅ Cambiado
     maxLevel: 3,
     type: "armor",
     appliesTo: "Armadura",
@@ -128,14 +128,14 @@ export const MINECRAFT_ENCHANTS: EnchantmentDef[] = [
   // --- ARMAS (ESPADA / HACHA) ---
   {
     id: "sharpness",
-    name: "Filo (Sharpness)",
+    name: "Filo", // ✅ Cambiado
     maxLevel: 5,
     type: "weapon",
     appliesTo: "Espada, Hacha",
   },
   {
     id: "smite",
-    name: "Golpeo (Smite)",
+    name: "Golpeo", // ✅ Cambiado
     maxLevel: 5,
     type: "weapon",
     appliesTo: "Espada",
@@ -163,7 +163,7 @@ export const MINECRAFT_ENCHANTS: EnchantmentDef[] = [
   },
   {
     id: "looting",
-    name: "Botín (Looting)",
+    name: "Botín", // ✅ Cambiado
     maxLevel: 3,
     type: "weapon",
     appliesTo: "Espada",

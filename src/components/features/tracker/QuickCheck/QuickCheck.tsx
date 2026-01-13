@@ -5,7 +5,7 @@ import { UIEnchantment } from "@/types";
 import { apiCall } from "@/utils/api-client";
 import styles from "./QuickCheck.module.css";
 
-const MAX_PRICE = 64; // Límite global
+const MAX_PRICE = 64;
 
 interface Props {
   worldId: string;
@@ -33,14 +33,17 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
     };
   }, [selectedId, data]);
 
-  // --- 🔒 VALIDACIÓN NIVEL ---
+  // UX: Auto-seleccionar texto al hacer clic
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select();
+  };
+
   const handleLevelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     if (val === "") {
       setNewLevel("");
       return;
     }
-
     const num = parseInt(val);
     if (isNaN(num)) return;
 
@@ -50,32 +53,24 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
     else setNewLevel(val);
   };
 
-  // --- 💰 NUEVA VALIDACIÓN PRECIO ---
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     if (val === "") {
       setNewPrice("");
       return;
     }
-
     const num = parseInt(val);
     if (isNaN(num)) return;
 
-    if (num > MAX_PRICE) {
-      setNewPrice(String(MAX_PRICE)); // Fuerza 64
-    } else if (num < 0) {
-      setNewPrice("0");
-    } else {
-      setNewPrice(val);
-    }
+    if (num > MAX_PRICE) setNewPrice(String(MAX_PRICE));
+    else if (num < 0) setNewPrice("0");
+    else setNewPrice(val);
   };
 
   // Logic for Save Button
   const inputLvl = parseInt(newLevel);
-  // Solo validamos que no esté vacío o sea 0 negativo extraño
   const isInvalidZero =
     selectedId && (newLevel === "" || (inputLvl <= 0 && newLevel !== ""));
-
   const canSave =
     selectedId && newLevel && newPrice && !isInvalidZero && !isSaving;
 
@@ -158,6 +153,7 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
     <div className={styles.card}>
       <div className={styles.header}>⚡ Verificador Rápido</div>
       <div className={styles.grid}>
+        {/* COLUMNA 1: SELECT */}
         <div className={styles.fullWidthMobile}>
           <label className={styles.label}>Aldeano ofrece...</label>
           <select
@@ -172,40 +168,48 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
             <option value="">Selecciona libro...</option>
             {sortedOptions.map((e) => (
               <option key={e.id} value={e.id}>
-                {e.name} (Max {e.maxLevel})
+                {e.name}
               </option>
             ))}
           </select>
         </div>
 
+        {/* COLUMNA 2: LEVEL (Input limpio) */}
         <div>
           <label className={styles.label}>Nivel</label>
           <input
             type="number"
-            className={styles.input}
+            className={styles.inputNumber} // Usamos la clase nueva
             placeholder={selectedId ? `Max ${maxLabel}` : "-"}
             value={newLevel}
-            onChange={handleLevelChange} // <--- VALIDACIÓN
+            onChange={handleLevelChange}
+            onFocus={handleFocus} // Selección automática
             disabled={!selectedId}
             min="1"
             max={maxLabel}
           />
         </div>
 
+        {/* COLUMNA 3: PRICE (Wrapper con $) */}
         <div>
           <label className={styles.label}>Precio</label>
-          <input
-            type="number"
-            className={styles.input}
-            placeholder="$"
-            value={newPrice}
-            onChange={handlePriceChange} // <--- VALIDACIÓN
-            disabled={!selectedId}
-            min="1"
-            max={MAX_PRICE}
-          />
+          <div className={styles.priceWrapper}>
+            <span>$</span>
+            <input
+              type="number"
+              className={styles.inputPrice} // Input transparente dentro
+              placeholder="-"
+              value={newPrice}
+              onChange={handlePriceChange}
+              onFocus={handleFocus} // Selección automática
+              disabled={!selectedId}
+              min="1"
+              max={MAX_PRICE}
+            />
+          </div>
         </div>
 
+        {/* COLUMNA 4: BOTÓN */}
         <button
           className={styles.button}
           onClick={handleSave}
@@ -215,7 +219,7 @@ export default function QuickCheck({ worldId, data, onRefresh }: Props) {
             ? "..."
             : currentData?.level === 0
             ? "Guardar"
-            : "Reemplazar"}
+            : "Actualizar"}
         </button>
 
         {selectedId && (newLevel || newPrice) && (

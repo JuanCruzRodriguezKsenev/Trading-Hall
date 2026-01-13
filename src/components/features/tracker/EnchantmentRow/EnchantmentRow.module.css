@@ -1,0 +1,278 @@
+/* src/components/features/tracker/EnchantmentRow.module.css */
+
+/* --- CONFIGURACIÓN DE FILA (TR) --- 
+   Basamos la indicación de estado únicamente en el color de fondo 
+*/
+.rowEmpty {
+  background-color: transparent;
+  color: var(--mc-text-muted);
+}
+.rowMax {
+  background-color: rgba(16, 185, 129, 0.08);
+}
+.rowMid {
+  background-color: rgba(245, 158, 11, 0.08);
+}
+.rowLow {
+  background-color: rgba(239, 68, 68, 0.08);
+}
+
+/* --- HOVER (REALCE DE COLOR) --- */
+.rowEmpty:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+.rowMax:hover {
+  background-color: rgba(16, 185, 129, 0.25);
+  transition: background-color 0.2s ease;
+}
+.rowMid:hover {
+  background-color: rgba(245, 158, 11, 0.25);
+  transition: background-color 0.2s ease;
+}
+.rowLow:hover {
+  background-color: rgba(239, 68, 68, 0.25);
+  transition: background-color 0.2s ease;
+}
+
+/* --- CELDAS DESKTOP --- */
+.rowEmpty td,
+.rowMax td,
+.rowMid td,
+.rowLow td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--mc-border);
+}
+
+/* --- INPUTS (Números y Precios) --- */
+.inputNumber,
+.inputPrice {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: var(--mc-text-primary);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-family: inherit;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s;
+  height: 32px;
+  font-size: 0.95rem;
+}
+
+/* Quitar flechas de los inputs numéricos */
+.inputNumber::-webkit-outer-spin-button,
+.inputNumber::-webkit-inner-spin-button,
+.inputPrice::-webkit-outer-spin-button,
+.inputPrice::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.inputNumber {
+  -moz-appearance: textfield;
+  width: 45px;
+  text-align: center;
+}
+
+.inputPrice {
+  -moz-appearance: textfield;
+  width: 100%;
+  max-width: 45px;
+  padding: 0 6px 0 2px;
+  text-align: right;
+  background-color: transparent !important;
+}
+
+.inputNumber:focus {
+  background-color: var(--mc-bg-input);
+  border-color: var(--mc-diamond);
+}
+
+.priceWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding-left: 8px;
+  border: 1px solid transparent;
+  width: fit-content;
+  transition: all 0.2s;
+}
+
+.priceWrapper span {
+  color: var(--mc-text-secondary);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.priceWrapper:focus-within {
+  background-color: var(--mc-bg-input);
+  border-color: var(--mc-diamond);
+}
+
+/* --- BADGES (Etiquetas de Estado) --- */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid currentColor;
+  min-width: 60px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.badgeMissing {
+  color: var(--mc-text-muted);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.badgeMax {
+  color: var(--mc-emerald);
+  background-color: rgba(16, 185, 129, 0.15);
+}
+.badgeMid {
+  color: var(--mc-gold);
+  background-color: rgba(245, 158, 11, 0.15);
+}
+.badgeLow {
+  color: var(--mc-redstone);
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+/* --- TIPOGRAFÍA Y META INFO --- */
+.nameText {
+  font-size: 1rem;
+  font-weight: 600;
+  display: block;
+  color: var(--mc-text-primary);
+}
+.subText {
+  font-size: 0.8rem;
+  color: var(--mc-text-secondary);
+  margin-top: 4px;
+  display: block;
+}
+.metaContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.commitInfo {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--mc-text-muted);
+  margin-top: 4px;
+}
+.userDot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--mc-diamond);
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.userName {
+  font-weight: 600;
+  color: var(--mc-text-secondary);
+  margin-right: 4px;
+}
+.dateText {
+  opacity: 0.7;
+}
+
+.maxSuffix {
+  padding-left: 0.5rem;
+}
+
+/* =========================================================
+   📱 MOBILE VIEW (Responsive Card Layout)
+   ========================================================= */
+@media (max-width: 768px) {
+  .rowEmpty,
+  .rowMax,
+  .rowMid,
+  .rowLow {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr auto;
+    grid-template-areas:
+      "header header header"
+      "level price status";
+    gap: 0.75rem;
+    padding: 1rem;
+    align-items: center;
+    border-bottom: 1px solid var(--mc-border);
+    position: relative;
+  }
+
+  /* Celda de Nombre (Header de la Card) */
+  .rowEmpty td:nth-child(1),
+  .rowMax td:nth-child(1),
+  .rowMid td:nth-child(1),
+  .rowLow td:nth-child(1) {
+    grid-area: header;
+    display: block;
+    width: 100%;
+    border: none;
+    padding: 0 0 0.5rem 0;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  }
+
+  .rowEmpty td:nth-child(2),
+  .rowMax td:nth-child(2),
+  .rowMid td:nth-child(2),
+  .rowLow td:nth-child(2) {
+    grid-area: level;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0;
+    border: none;
+  }
+
+  .rowEmpty td:nth-child(3),
+  .rowMax td:nth-child(3),
+  .rowMid td:nth-child(3),
+  .rowLow td:nth-child(3) {
+    grid-area: price;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    border: none;
+  }
+
+  .rowEmpty td:nth-child(4),
+  .rowMax td:nth-child(4),
+  .rowMid td:nth-child(4),
+  .rowLow td:nth-child(4) {
+    grid-area: status;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0;
+    border: none;
+  }
+
+  .inputNumber,
+  .inputPrice {
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .inputNumber {
+    width: 70px;
+  }
+  .inputPrice {
+    width: 100%;
+    max-width: 120px;
+  }
+
+  .maxSuffix {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    padding-left: 0.5rem;
+  }
+}

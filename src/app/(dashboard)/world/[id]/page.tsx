@@ -11,8 +11,8 @@ import { UIEnchantment } from "@/types";
 import { InviteButton } from "@/components/features/tracker/InviteButton";
 
 // Componentes
-import QuickCheck from "@/components/features/tracker/QuickCheck";
-import EnchantmentTable from "@/components/features/tracker/EnchantmentTable";
+import QuickCheck from "@/components/features/tracker/QuickCheck/QuickCheck";
+import EnchantmentTable from "@/components/features/tracker/EnchantmentTable/EnchantmentTable";
 import Filter, {
   FilterFieldDef,
   SortOptionDef,
@@ -25,7 +25,7 @@ import { SortConfig } from "@/hooks/useDataFilters"; // Asegúrate de tener este
 // Nos dice el estado textual y un "peso" numérico para ordenar
 const getItemStatus = (def: EnchantmentDef, dbEntry?: UIEnchantment) => {
   const level = dbEntry?.level || 0;
-  
+
   if (level === 0) return { label: "Falta", weight: 0 };
   if (level === def.maxLevel) return { label: "Max", weight: 2 };
   return { label: "Mejora", weight: 1 };
