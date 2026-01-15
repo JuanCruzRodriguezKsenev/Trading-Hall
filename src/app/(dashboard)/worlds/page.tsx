@@ -2,17 +2,20 @@
 import { useState } from "react";
 import { WorldList } from "@/components/features/world-select/WorldList";
 import Filter from "@/components/features/tracker/Filter/Filter";
+import { World } from "@/types"; // Importamos la interfaz para el genérico
 
 export default function WorldsPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Estado inicial sincronizado con el componente Filter
-  const [filters, setFilters] = useState({
+  // Definimos el estado de filtros usando la interfaz World para evitar errores de tipo
+  const [filters, setFilters] = useState<
+    Partial<Record<keyof World | "type", string>>
+  >({
     type: "all",
   });
 
   const [sortConfig, setSortConfig] = useState<{
-    key: string;
+    key: keyof World;
     direction: "asc" | "desc";
   } | null>({ key: "createdAt", direction: "desc" });
 
@@ -28,7 +31,11 @@ export default function WorldsPage() {
         Selecciona un servidor para ver sus precios
       </p>
 
-      <Filter
+      {/* PASO CLAVE: Añadimos <any> o <World> al componente Filter. 
+        Esto permite que acepte llaves como 'name' y 'createdAt' sin quejarse 
+        de que no coinciden con 'type'.
+      */}
+      <Filter<any>
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         placeholder="Buscar mundo por nombre..."
@@ -39,7 +46,6 @@ export default function WorldsPage() {
           {
             key: "type",
             label: "Privacidad",
-            // Solo pasamos las opciones extra, "Todos" lo crea el componente automáticamente
             options: ["Privado", "Compartido"],
           },
         ]}
@@ -55,7 +61,7 @@ export default function WorldsPage() {
       <div style={{ marginTop: "2rem" }}>
         <WorldList
           searchQuery={searchQuery}
-          filterType={filters.type}
+          filterType={filters.type || "all"}
           sortConfig={sortConfig}
         />
       </div>
